@@ -7,8 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@MappedSuperclass
 public class AutoMotor {
 
    /* @Id
