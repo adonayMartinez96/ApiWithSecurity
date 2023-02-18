@@ -6,7 +6,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-public class Carro extends AutoMotor {
+public class Carro extends AutoMotor    {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
