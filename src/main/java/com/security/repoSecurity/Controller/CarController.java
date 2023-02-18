@@ -1,16 +1,17 @@
 package com.security.repoSecurity.Controller;
 
+import com.security.repoSecurity.DTO.CarroDTO;
 import com.security.repoSecurity.Models.Carro;
 import com.security.repoSecurity.Service.Implementations.ImpCarroService;
 import com.security.repoSecurity.Service.Interface.ICarroService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class CarController {
@@ -19,20 +20,27 @@ public class CarController {
     private ImpCarroService impCarroService;
 
     @PreAuthorize("hasRole('ROLE_USER')")
-    @RequestMapping(value = "/saveCar", method = RequestMethod.POST)
-    public void saveCar(@RequestBody Carro carro){
-        impCarroService.saveCarro(carro);
-    }
-
     @RequestMapping(value = "/getAllCar", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('ROLE_USER')")
     public List<Carro> getAllCar(){
         return impCarroService.getAllCarro();
     }
 
-    @RequestMapping(value = "/deleteCar", method = RequestMethod.DELETE)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @RequestMapping(value = "/saveCar", method = RequestMethod.POST)
+    public ResponseEntity<?> saveCar(@RequestBody CarroDTO carro){
+        impCarroService.saveCarro(carro);
+        return new ResponseEntity<>("Usuario registrado exitosamente", HttpStatus.OK);
+    }
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void deleteCar(int id){
-        impCarroService.deleteCarro(id);
+    @RequestMapping(value = "api/updateCar/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<Carro> updateUser(@PathVariable int id, @RequestBody CarroDTO carroDTO) {
+       return impCarroService.updateCarro(id, carroDTO);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping(value = "/deleteCar/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteCar(@PathVariable int id){
+        return impCarroService.deleteCarro(id);
     }
 }
